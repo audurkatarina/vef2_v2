@@ -31,3 +31,16 @@ export async function query(q, values = []) {
     client.release();
   }
 }
+
+/**
+ * Bætir við umsókn.
+ *
+ * @param {array} data Fylki af gögnum fyrir umsókn
+ * @returns {object} Hlut með niðurstöðu af því að keyra fyrirspurn
+ */
+export async function insert(data) {
+  const q = `INSERT INTO signatures(name, nationalId, comment, anonymous) VALUES ($1, $2, $3, $4)`;
+  const values = [data.name, data.nationalId, data.comment, data.anonymous];
+
+  return query(q, values);
+}

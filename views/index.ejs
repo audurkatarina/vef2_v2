@@ -1,31 +1,41 @@
 <%- include('header') -%>
 <main>
 <h1>Undirskriftarlisti</h1>
-<form method="post" action="/post">
+<form method="post" action="/">
+  <div class="field<%= locals.isInvalid('name', errors) ?  ' field--invalid' : '' %>">
   <label>
     Nafn*
-    <input required type="text" name="name" value="<%= name=>">
+    <input type="text" name="name" value="<%= name %>">
   </label>
+  </div>
+  <div class="field<%= locals.isInvalid('nationalId', errors) ?  ' field--invalid' : '' %>">
   <label>
     Kennitala*
     <input
-      required
       type="text"
-      pattern="<%=nationalIdPattern=>"
       name="nationalId"
-      value="${nationalId}"
+      value="<%= nationalId %>"
       placeholder="000000-0000"
     >
   </label>
+  </div>
   <label>
     Athugasemd:
-    <textarea id="comment" name="comment" value="<%=comment=>"></textarea>
+    <textarea id="comment" name="comment" value="<%=comment %>"></textarea>
   </label>
   <div>
-    <input type="checkbox" id="anon" name="anon">
+    <input type="checkbox" name="anon">
     <label for="anon">Ekki birta nafn á lista</label>
   </div>
   <button>Skrifa undir</button>
 </form>
+<% if (errors.length>0) { %>
+    <p>Villur við undirskrift:</p>
+    <ul>
+        <% errors.forEach((error) => { %>
+            <li class="error"><label for="<%= error.param %>"><%= error.msg %></label></li>
+        <% }); %>
+    </ul>
+<% }%>
 </main>
 <%- include('footer') -%>
