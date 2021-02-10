@@ -1,0 +1,31 @@
+<%- include('header') -%>
+<main>
+<h1>Undirskriftarlisti</h1>
+<form method="post" action="/post">
+  <label>
+    Nafn*
+    <input required type="text" name="name" value="<%= name=>">
+  </label>
+  <label>
+    Kennitala*
+    <input
+      required
+      type="text"
+      pattern="<%=nationalIdPattern=>"
+      name="nationalId"
+      value="${nationalId}"
+      placeholder="000000-0000"
+    >
+  </label>
+  <label>
+    Athugasemd:
+    <textarea id="comment" name="comment" value="<%=comment=>"></textarea>
+  </label>
+  <div>
+    <input type="checkbox" id="anon" name="anon">
+    <label for="anon">Ekki birta nafn á lista</label>
+  </div>
+  <button>Skrifa undir</button>
+</form>
+</main>
+<%- include('footer') -%>
