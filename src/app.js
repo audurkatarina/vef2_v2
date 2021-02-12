@@ -19,7 +19,8 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(new URL('./public', import.meta.url).pathname));
+//app.use(express.static(new URL('./public', import.meta.url).pathname));
+app.use('/public', express.static('public'));
 
 /**
  * Hjálparfall til að athuga hvort reitur sé gildur eða ekki.

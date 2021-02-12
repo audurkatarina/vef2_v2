@@ -2,7 +2,7 @@ import express from 'express';
 import xss from 'xss';
 import pkg from 'express-validator';
 const { check, validationResult, sanitize } = pkg;
-import { insert } from './db.js';
+import { insert, select } from './db.js';
 
 const nationalIdPattern = '^[0-9]{6}-?[0-9]{4}$';
 
@@ -69,12 +69,22 @@ export const router = express.Router();
  * @param {object} res Response hlutur
  * @returns {string} Formi fyrir umsókn
  */
-function form(req, res) {
+async function form(req, res) {
+    const signatures = await select();
+    signatures.forEach((signature) => {
+        const d = new Date(signature.signed);
+        const day = (`0${d.getDate()}`).slice(-2);
+        const month = (`0${d.getMonth()+1}`).slice(-2);
+        const date = `${day}.${month}.${d.getFullYear()}`;
+        signature.signed = date;
+    });
+
     const data = {
       title: 'Undirskriftarlisti',
       name: '',
       nationalId: '',
       comment: '',
+      signatures,
       errors: [],
     };
     res.render('index', data);
@@ -89,7 +99,7 @@ function form(req, res) {
  * @param {function} next Næsta middleware
  * @returns Næsta middleware ef í lagi, annars síðu með villum
  */
-function showErrors(req, res, next) {
+async function showErrors(req, res, next) {
     const {
       body: {
         name = '',
@@ -97,11 +107,20 @@ function showErrors(req, res, next) {
         comment = '',
       } = {},
     } = req;
+    const signatures = await select();
+    signatures.forEach((signature) => {
+        const d = new Date(signature.signed);
+        const day = (`0${d.getDate()}`).slice(-2);
+        const month = (`0${d.getMonth()+1}`).slice(-2);
+        const date = `${day}.${month}.${d.getFullYear()}`;
+        signature.signed = date;
+    });
   
     const data = {
       name,
       nationalId,
       comment,
+      signatures,
     };
   
     const validation = validationResult(req);
@@ -109,7 +128,6 @@ function showErrors(req, res, next) {
     if (!validation.isEmpty()) {
       const errors = validation.array();
       data.errors = errors;
-      data.title = 'Undirskriftarlisti – vandræði';
   
       return res.render('index', data);
     }
@@ -150,7 +168,7 @@ async function formPost(req, res) {
     return res.redirect('/');
   }
 
-router.get('/', form);
+router.get('/', catchErrors(form));
 
 router.post(
     '/',

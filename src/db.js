@@ -33,7 +33,7 @@ export async function query(q, values = []) {
 }
 
 /**
- * Bætir við umsókn.
+ * Bætir við undirskrift.
  *
  * @param {array} data Fylki af gögnum fyrir umsókn
  * @returns {object} Hlut með niðurstöðu af því að keyra fyrirspurn
@@ -43,4 +43,15 @@ export async function insert(data) {
   const values = [data.name, data.nationalId, data.comment, data.anonymous];
 
   return query(q, values);
+}
+
+/**
+ * Sækir allar undirskriftir
+ *
+ * @returns {array} Fylki af öllum umsóknum
+ */
+export async function select() {
+  const result = await query('SELECT * FROM signatures ORDER BY id');
+
+  return result.rows;
 }

@@ -1,41 +1,63 @@
 <%- include('header') -%>
 <main>
 <h1>Undirskriftarlisti</h1>
-<form method="post" action="/">
+<form class="form" method="post" action="/">
   <div class="field<%= locals.isInvalid('name', errors) ?  ' field--invalid' : '' %>">
-  <label>
-    Nafn*
+  <label for="name">Nafn* </label>
     <input type="text" name="name" value="<%= name %>">
-  </label>
   </div>
   <div class="field<%= locals.isInvalid('nationalId', errors) ?  ' field--invalid' : '' %>">
-  <label>
-    Kennitala*
-    <input
-      type="text"
-      name="nationalId"
-      value="<%= nationalId %>"
-      placeholder="000000-0000"
-    >
-  </label>
-  </div>
-  <label>
-    Athugasemd:
+  <label for="nationalId">Kennitala* </label>
+    <input type="text" name="nationalId" value="<%= nationalId %>"placeholder="000000-0000">
+  </div class="field">
+  <div class="field">
+    <label for="comment">Athugasemd: </label>
     <textarea id="comment" name="comment" value="<%=comment %>"></textarea>
-  </label>
-  <div>
+  </div>
+  <div class="check">
     <input type="checkbox" name="anon">
     <label for="anon">Ekki birta nafn á lista</label>
   </div>
-  <button>Skrifa undir</button>
-</form>
-<% if (errors.length>0) { %>
-    <p>Villur við undirskrift:</p>
+  <% if (errors.length>0) { %>
+    <h3>Villur við undirskrift:</h3>
+    <div class=errors>
     <ul>
         <% errors.forEach((error) => { %>
             <li class="error"><label for="<%= error.param %>"><%= error.msg %></label></li>
         <% }); %>
     </ul>
+    </div>
 <% }%>
+<div class="button">
+  <button>Skrifa undir</button>
+</div>
+</form>
+<hr class="lina"/>
+<div>
+<% if (signatures.length > 0) { %>
+
+    <h2>Undiskriftir</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="table__head">Dags</th>
+                <th class="table__head">Nafn</th>
+                <th class="table__head">Athugasemd</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% signatures.forEach((signature) => { %>
+            <tr>
+                <td class="table__dags"><%= signature.signed %></td>
+                <td class="table__nafn"><%= signature.anonymous ?  'Nafnlaus' : signature.name %></td>
+                <td class="table__ath"><%= signature.comment %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <p>Engar undiskriftir</p>
+    <% } %>
+</div>
 </main>
 <%- include('footer') -%>
