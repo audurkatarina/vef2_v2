@@ -1,7 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-
-// eslint-disable-next-line import/extensions
 import { router } from './registration.js';
 
 dotenv.config();
@@ -11,15 +9,10 @@ const {
 } = process.env;
 
 const app = express();
-
-//const viewsPath = new URL('../views', import.meta.url).pathname;
-
-//app.set('views', viewsPath);
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 
-//app.use(express.static(new URL('./public', import.meta.url).pathname));
 app.use('/public', express.static('public'));
 
 /**
@@ -30,7 +23,7 @@ app.use('/public', express.static('public'));
  * @returns {boolean} `true` ef `field` er í `errors`, `false` annars
  */
 function isInvalid(field, errors) {
-  return Boolean(errors.find(i => i.param === field));
+  return Boolean(errors.find((i) => i.param === field));
 }
 
 app.locals.isInvalid = isInvalid;
