@@ -9,7 +9,7 @@
   box-sizing: inherit;
 }
 
-html { /* stylelint-disable-line */
+html {
   box-sizing: border-box;
   overflow-x: hidden;
   font-family: 'Open Sans', sans-serif;
