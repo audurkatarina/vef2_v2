@@ -3,7 +3,7 @@ import xss from 'xss';
 import pkg from 'express-validator';
 import { insert, select } from './db.js';
 
-const { check, validationResult, sanitize } = pkg;
+const { check, validationResult, body } = pkg;
 
 const nationalIdPattern = '^[0-9]{6}-?[0-9]{4}$';
 
@@ -54,10 +54,10 @@ const validations = [
 ];
 
 const sanitazions = [
-  sanitize('name').trim().escape(),
+  body('name').trim().escape(),
   sanitizeXss('name'),
 
-  sanitize('nationalId').blacklist('-'),
+  body('nationalId').blacklist('-'),
   sanitizeXss('nationalId'),
   sanitizeXss('anon'),
 ];
